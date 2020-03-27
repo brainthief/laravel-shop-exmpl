@@ -29,4 +29,4 @@ Route::get('/services', function () {
 
 Auth::routes();
 
-// Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('categories', 'CategoryController')->middleware('auth');
