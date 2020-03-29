@@ -27,11 +27,12 @@
   </select>
   <br />
   Photo:
+  <img src="{{Storage::url($product->photo)}}">
   <br />
   <input type="file" name="photo" />
   <br />
   <br />
-  <input type="submit" class="btn btn-primary" value="Create" />
+  <input type="submit" class="btn btn-primary" value="Save" />
   <br /><br />
  </form>
  </div>

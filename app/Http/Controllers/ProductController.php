@@ -6,6 +6,7 @@ use App\Category;
 use App\Product;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 
 class ProductController extends Controller
@@ -40,12 +41,13 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        $path = $request->file('photo')->store('photo', 'public');
         Product::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category_id' => $request->category_id,
-            'photo' => '',
+            'photo' => $path,
         ]);
         return redirect()->route('products.index');
     }
@@ -71,7 +73,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $categories = Category::all();
-        return view('products.edit', compact('product', 'categories'));
+        $url = Storage::path($product->photo);
+        return view('products.edit', compact('product', 'categories', 'url'));
     }
 
     /**
@@ -83,13 +86,25 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->file('photo') !== null) {
+            $path = $request->file('photo')->store('photo', 'public');
+        } else {
+            $path = '';
+        }
         $product = Product::findOrFail($id);
+
+        if ($path == '') {
+            $pathUrl = $product->photo;
+            // dd($pathUrl);
+        } else {
+            $pathUrl = $path;
+        }
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category_id' => $request->category_id,
-            'photo' => '',
+            'photo' => $pathUrl,
         ]);
         return redirect()->route('products.index');
     }
