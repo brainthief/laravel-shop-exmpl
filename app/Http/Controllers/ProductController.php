@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Product;
+use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -37,12 +38,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'name' => 'required|min:6',
-            'price' => 'required',
-        ]);
         Product::create([
             'name' => $request->name,
             'description' => $request->description,
